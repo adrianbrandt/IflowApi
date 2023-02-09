@@ -27,7 +27,7 @@ namespace IflowApi.Controllers
 
         //GET: api/Maskiner
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Machine>>> GetMaskiner()
+        public async Task<ActionResult<IEnumerable<Machine>>> GetMachines()
         {
             if (_dbContext.Machines== null)
             {
@@ -38,7 +38,7 @@ namespace IflowApi.Controllers
         
         //GET: api/Maskinene
         [HttpGet("{id},{key},{valid}")]
-        public async Task<ActionResult<IEnumerable<Machine>>> GetMaskinene(int id, string key, int valid)
+        public async Task<ActionResult<IEnumerable<Machine>>> GetUserMachines(int id, string key, int valid)
         {
             var usr = await _dbContext.Users.FindAsync(id);
 
@@ -62,39 +62,39 @@ namespace IflowApi.Controllers
 
         //GET: api/Maskiner/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Machine>> GetMaskin(int id)
+        public async Task<ActionResult<Machine>> GetMachine(int id)
         {
             if (_dbContext.Machines == null)
             {
                 return NotFound("Could not Find Machines");
             }
   
-            var maskiner = await _dbContext.Machines.FindAsync(id);
+            var machines = await _dbContext.Machines.FindAsync(id);
 
-            if (maskiner == null)
+            if (machines == null)
             {
                 return NotFound("Could not Find Machines");
             }
-            return maskiner;
+            return machines;
         }
 
 
 
         //POST: api/Maskiner
         [HttpPost("{navn},{user}")]
-        public async Task<ActionResult<Machine>> PostMaskin(string navn, int user)
+        public async Task<ActionResult<Machine>> PostMachine(string navn, int user)
         {
-            Machine leggtil = new Machine();
-            leggtil.user = user;
-            leggtil.name = navn;
-            _dbContext.Machines.Add(leggtil);
+            Machine adder = new Machine();
+            adder.user = user;
+            adder.name = navn;
+            _dbContext.Machines.Add(adder);
             await _dbContext.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetMaskin), new { id = leggtil.id }, leggtil);
+            return CreatedAtAction(nameof(GetMachine), new { id = adder.id }, adder);
         }
         //PUT: api/maskin
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMaskin(int id, Machine maskin)
+        public async Task<IActionResult> PutMachine(int id, Machine maskin)
         {
             if (id != maskin.id)
             {
@@ -106,7 +106,7 @@ namespace IflowApi.Controllers
             try { await _dbContext.SaveChangesAsync();}
             catch (DbUpdateConcurrencyException)
             {
-                if (!MaskinExists(id))
+                if (!MachineExists(id))
                 {
                     return NotFound("Could not Find Machine");
                 }
@@ -120,24 +120,24 @@ namespace IflowApi.Controllers
 
         //DELETE: api/Maskin/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMaskin(int id)
+        public async Task<IActionResult> DeleteMachine(int id)
         {
             if (_dbContext.Machines == null)
             { 
                 return NotFound("Could not Find Machines"); 
             }
 
-            var maskin = await _dbContext.Machines.FindAsync(id);
-            if (maskin == null)
+            var machine = await _dbContext.Machines.FindAsync(id);
+            if (machine == null)
             {
                 return NotFound("Could not Find Machine");
             }
-            _dbContext.Machines.Remove(maskin);
+            _dbContext.Machines.Remove(machine);
             await _dbContext.SaveChangesAsync();
 
             return NoContent();
         }
-        private bool MaskinExists(long id)
+        private bool MachineExists(long id)
         {
             return (_dbContext.Machines?.Any(e => e.id== id)).GetValueOrDefault();
         }
